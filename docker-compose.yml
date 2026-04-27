@@ -1,0 +1,54 @@
+services:
+  flask_app:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    image: talrozman/iac-ai
+    container_name: flask
+    ports:
+      - "8000:8000"
+    # volumes:
+    #   - ./app:/home/flaskApp/app
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - OLLAMA_URI=Ollama:11434
+    networks:
+      - app_network
+    depends_on:
+      # - mongo
+      - ollama
+
+  ollama:
+    image: ollama/ollama
+    container_name: Ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - app_network
+
+  # mongo:
+  #   image: mongo:latest
+  #   container_name: mongo
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - myapp:/home/mongodb
+  #   networks:
+  #     - app_network
+
+  # mongo_express:
+  #   image: mongo-express
+  #   container_name: mongoex
+  #   ports:
+  #     - "8081:8081"
+  #   networks:
+  #     - app_network
+  #   depends_on:
+  #     - mongo
+
+# volumes:
+#   myapp:
+
+networks:
+  app_network:
+    driver: bridge
