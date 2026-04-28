@@ -30,19 +30,11 @@ def create_model(model_list) -> tuple[bool,str]:
         \n\ttuple: (status: bool,message: str)
     """
     models = [model.model for model in model_list.models]
-    if ("llama3.2:latest" in models) and ("myModel:latest" in models) :
+    if ("llama3.2:latest" in models):
             return (True, "all required models exist")
     
     try:
         ollama_client.pull("llama3.2")
-        ollama_client.create(model='myModel', 
-        from_="llama3.2", 
-        system='''
-            You are an expert medical triage and injury classification assistant.
-            Your task is to analyze the provided information about an injury and assign it a specific "Injury Rank" based on a standardized scale.
-        ''',
-        parameters={"temperature" :0.2})
-
         return (True, "all models pulled and created successfully")
     except Exception as e:
         return (False, f"Error while pulling or creating ollama model: {e}")
