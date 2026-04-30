@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="static/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <h1>Hello Bana</h1>
+    <div class="main-display">
+        <div class="image-wrapper">
+            <img id="human_image" src="static/images/front.png" usemap="#body-map-front" alt="Human Body" />
+            <canvas id="overlay-canvas"></canvas>
+        </div>
+
+        <map name="body-map-front">
+            <area alt="head" title="head" coords="143,71,54" shape="circle"
+                onclick="add_injury('head')">
+            <area alt="neck" title="neck" coords="117,120,65,146,121,162,167,165,215,147,168,119,142,127,129,124"
+                shape="poly" onclick="add_injury('neck')">
+            <area alt="chest" title="chest"
+                coords="66,148,138,166,217,150,214,190,210,233,203,256,178,248,149,244,141,245,118,248,91,250,68,254,66,226,65,192"
+                shape="poly" onclick="add_injury('chest')">
+            <area alt="abdomen" title="abdomen"
+                coords="67,255,145,245,203,254,201,292,200,312,205,333,205,354,200,360,179,388,166,396,131,400,110,388,90,367,74,354,83,319"
+                shape="poly" onclick="add_injury('abdomen')">
+            <area alt="hip" title="hip" coords="63,445,75,356,114,393,144,400,181,386,205,355,214,401,219,443"
+                shape="poly" onclick="add_injury('hip')">
+            <area alt="right-thigh" title="right-thigh" coords="65,446,141,443,134,581,87,582,76,532,66,484"
+                shape="poly" onclick="add_injury('right-thigh')">
+            <area alt="left-thigh" title="left-thigh"
+                coords="143,443,220,444,221,521,205,579,157,580,145,502,144,475" shape="poly"
+                onclick="add_injury('left-thigh')">
+            <area alt="right-knee" title="right-knee" coords="82,582,138,628" shape="rect"
+                onclick="add_injury('right-knee')">
+            <area alt="left-knee" title="left-knee" coords="152,582,208,624" shape="rect"
+                onclick="add_injury('left-knee')">
+            <area alt="right-shin" title="right-shin"
+                coords="85,629,133,630,140,654,137,681,135,708,138,734,141,755,141,771,109,778,83,685,79,654"
+                shape="poly" onclick="add_injury('right-shin')">
+            <area alt="left-shin" title="left-shin"
+                coords="161,625,205,626,209,657,205,695,197,726,192,774,165,768,165,738,160,716,154,685,152,661,153,643,156,635"
+                shape="poly" onclick="add_injury('left-shin')">
+            <area alt="right-leg" title="right-leg"
+                coords="108,779,142,774,142,823,131,826,120,826,111,824,99,825,109,807,114,799" shape="poly"
+                onclick="add_injury('right-leg')">
+            <area alt="left-leg" title="left-leg"
+                coords="161,773,162,816,177,821,190,827,210,826,219,816,201,799,191,776" shape="poly"
+                onclick="add_injury('left-leg')">
+            <area alt="right-hand" title="right-hand"
+                coords="65,143,44,156,32,170,25,199,25,215,19,236,13,261,10,282,5,300,9,327,10,357,8,387,9,423,10,449,25,466,39,469,49,472,52,445,51,433,46,407,35,394,48,357,55,305,65,249"
+                shape="poly" onclick="add_injury('right-hand')">
+            <area alt="left-hand" title="left-hand"
+                coords="218,148,237,163,243,179,246,201,243,219,251,239,249,263,250,281,259,301,260,322,260,359,267,392,312,433,284,424,293,442,297,470,281,479,272,482,259,482,248,472,239,444,240,407,231,382,224,363,212,330,209,304,206,255,214,185"
+                shape="poly" onclick="add_injury('left-hand')">
+        </map>
+
+        <map name="body-map-back">
+            <area alt="head" title="head" coords="167,57,47" shape="circle" onclick="add_injury('head')">
+            <area alt="nape" title="nape" coords="138,98,137,129,86,150,88,203,242,199,242,145,196,133,190,100,165,107"
+                shape="poly" onclick="add_injury('nape')">
+            <area alt="back" title="back"
+                coords="87,203,95,259,107,295,102,343,170,382,231,351,228,299,241,257,239,199,164,201,123,203"
+                shape="poly" onclick="add_injury('back')">
+            <area alt="buttocks" title="buttocks"
+                coords="104,349,86,453,120,457,167,452,203,456,244,456,239,401,231,351,169,384" shape="poly"
+                onclick="add_injury('buttocks')">
+            <area alt="left-thigh" title="left-thigh"
+                coords="90,511,105,594,151,597,161,497,163,454,120,460,88,456" shape="poly"
+                onclick="add_injury('left-thigh')">
+            <area alt="right-thigh" title="right-thigh"
+                coords="170,455,168,492,173,591,225,591,238,502,243,457" shape="poly"
+                onclick="add_injury('right-thigh')">
+            <area alt="left-shin" title="left-shin"
+                coords="106,595,97,641,100,681,108,713,117,775,145,777,142,743,153,658,148,597" shape="poly"
+                onclick="add_injury('left-shin')">
+            <area alt="right-shin" title="right-shin"
+                coords="174,592,178,617,171,665,177,739,168,776,197,776,206,729,220,693,227,656,221,610,225,592,200,593"
+                shape="poly" onclick="add_injury('right-shin')">
+            <area alt="left-foot" title="left-foot"
+                coords="146,775,146,813,119,817,99,810,98,799,115,794,115,777" shape="poly"
+                onclick="add_injury('left-foot')">
+            <area alt="right-foot" title="right-foot"
+                coords="166,776,167,813,184,814,219,812,212,799,201,789,198,776" shape="poly"
+                onclick="add_injury('right-foot')">
+            <area alt="left-hand" title="left-hand"
+                coords="85,152,73,158,62,174,55,191,60,210,57,227,51,256,51,279,46,301,45,322,44,340,46,369,46,387,37,398,3,422,8,430,24,421,20,433,14,455,16,463,25,467,34,472,45,472,51,467,62,463,67,443,72,419,70,398,72,380,80,360,89,336,94,300,97,269"
+                shape="poly" onclick="add_injury('left-hand')">
+            <area alt="right-hand" title="right-hand"
+                coords="243,144,265,158,275,179,278,210,279,224,288,254,293,276,297,301,298,326,296,358,299,391,298,417,299,451,284,462,261,469,253,464,255,450,258,425,264,403,271,395,262,368,255,351,249,324,250,296,244,270,242,259,241,199"
+                shape="poly" onclick="add_injury('right-hand')">
+        </map>
+
+        <div class="break"></div>
+        <button onclick="change_image_side()">FLIP</button><br/>
+        <button onclick="handle_completed()">DONE</button><br/>
+    </div>
+
+    <div id="severity_modal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Choose the severity of the <span id="injury-part"></span> injury</p>
+            <input type="range" id="select" name="severity" min="1" max="6" style="width: 80%;"/><br /><br />
+            <button id="severity_submit">Submit</button>
+        </div>
+    </div>
+
+
+
+    <script>
+        let image_side_flag = true; // true = front, false = back
+        let injury_list = [];
+
+        const img = document.getElementById('human_image');
+        const canvas = document.getElementById('overlay-canvas');
+
+        const allAreas = document.querySelectorAll('map area');
+        allAreas.forEach((area) => {
+            area.dataset.originalCoords = area.coords;
+        });
+
+        const resizeMapAndCanvas = () => {
+            if (!img.naturalWidth) return;
+
+            canvas.width = img.clientWidth;
+            canvas.height = img.clientHeight;
+
+            const scaleX = img.clientWidth / img.naturalWidth;
+            const scaleY = img.clientHeight / img.naturalHeight;
+
+            allAreas.forEach((area) => {
+                const coords = area.dataset.originalCoords.split(',').map(Number);
+                const scaledCoords = coords.map((coord, i) => {
+                    return i % 2 === 0 ? Math.round(coord * scaleX) : Math.round(coord * scaleY);
+                });
+
+                area.coords = scaledCoords.join(',');
+            });
+
+            drawHighlights();
+        };
+
+        window.addEventListener('resize', resizeMapAndCanvas);
+
+        if (img.complete) {
+            resizeMapAndCanvas();
+        } else {
+            img.addEventListener('load', resizeMapAndCanvas);
+        }
+
+        const drawHighlights = (severity = "") => {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            console.log("draw", severity, typeof severity)
+
+            const activeMapName = img.getAttribute('usemap').replace('#', '');
+            const activeMap = document.querySelector(`map[name="${activeMapName}"]`);
+
+            injury_list.forEach(item => {
+                const area = activeMap.querySelector(`area[title="${item.part}"]`);
+                if (!area) return;
+
+                switch (item.severity) {
+                    case "LIGHT":
+                        ctx.fillStyle = 'rgba(0, 200, 0, 0.5)'; // (Green)
+                        break;
+                    case "MODERATE":
+                        ctx.fillStyle = 'rgba(255, 255, 0, 0.5)'; // (Yellow)
+                        break;
+                    case "SERIOUS":
+                        ctx.fillStyle = 'rgba(255, 140, 0, 0.5)'; // (Orange)
+                        break;
+                    case "SEVERE":
+                        ctx.fillStyle = 'rgba(255, 0, 0, 0.5)'; // (Red)
+                        break;
+                    case "CRITICAL":
+                        ctx.fillStyle = 'rgba(139, 0, 0, 0.5)'; // (Dark Red)
+                        break;
+                    case "UNSURVIVEABLE":
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.6)'; // (Black)
+                        break;
+                    default:
+                        ctx.fillStyle = 'rgba(128, 128, 128, 0.5)'; // (Gray)
+                }
+
+                const coords = area.coords.split(',').map(Number);
+                const shape = area.shape.toLowerCase();
+
+                ctx.beginPath();
+
+                if (shape === 'poly') {
+                    ctx.moveTo(coords[0], coords[1]);
+                    for (let i = 2; i < coords.length; i += 2) {
+                        ctx.lineTo(coords[i], coords[i + 1]);
+                    }
+                } else if (shape === 'rect') {
+                    const [x1, y1, x2, y2] = coords;
+                    ctx.rect(x1, y1, x2 - x1, y2 - y1);
+                } else if (shape === 'circle') {
+                    const [x, y, radius] = coords;
+                    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+                }
+
+                ctx.fill();
+            });
+        };
+
+        const change_image_side = () => {
+            image_side_flag = !image_side_flag;
+            img.src = image_side_flag ? "static/images/front.png" : "static/images/back.png";
+            img.setAttribute("usemap", image_side_flag ? "#body-map-front" : "#body-map-back");
+        };
+
+        const handle_modal = (location) => {
+            return new Promise((resolve) => {
+                let modal = document.getElementById("severity_modal");
+                let submit = document.getElementById("severity_submit");
+
+                modal.style.display = "block";
+
+                const closeModal = () => {
+                    modal.style.display = "none";
+                    resolve("");
+                };
+                submit.onclick = () => {
+                    let val = parseInt(document.getElementById("select").value);
+                    modal.style.display = "none"
+                    switch (val) {
+                    case 1:resolve("LIGHT");break;
+                    case 2:resolve("MODERATE");break;
+                    case 3:resolve("SERIOUS");break;
+                    case 4:resolve("SEVERE");break;
+                    case 5:resolve("CRITICAL");break;
+                    case 6:resolve("UNSURVIVEABLE");break;
+                }};
+
+                document.getElementsByClassName("close")[0].onclick = closeModal;
+                window.onclick = (event) => {
+                    if (event.target === modal) {
+                        closeModal()
+                    }
+                }
+            })
+        }
+
+        const add_injury = async (location) => {
+            let severity = -1;
+            if (event) event.preventDefault();
+
+            const index = injury_list.findIndex(item => item.part === location);
+            if (index > -1) {
+                injury_list.splice(index, 1);
+                return;
+            }
+            else {
+                document.getElementById('injury-part').innerText = location.replaceAll('-', ' ');
+                severity = await handle_modal()
+                console.log(severity)
+                if (severity === "") return
+                injury_list.push({ "part": location, "severity": severity });
+            }
+            drawHighlights(severity);
+        };
+
+        const handle_completed=async()=>{
+            if(injury_list.length === 0) return;
+
+            let msg = "The patient has been diagnosed with ";
+
+            injury_list.forEach((item)=>{
+                msg += `${item.severity.toLowerCase()} ${item.part} injury, `
+            })
+
+            console.log(msg)
+
+            const data = await fetch('/query',
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(msg)
+            }).then(res => res.json());
+            console.log(data);
+        }
+    </script>
+
+</body>
+
+</html>
