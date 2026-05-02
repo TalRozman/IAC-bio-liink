@@ -10,6 +10,6 @@ def get_rag_chain_medical(prompt:str):
         \nreturns: 
         \n\tRAG response: a parsed pydantic response 
     """
-    response = ollama_client.generate(model="llama3.2",system=OLLAMA_SYSTEM_SETTINGS, prompt=prompt,options={"temperature": 0.0},format="json")
-    parsed = output_parser_medical.parse(response.response)
+    response = ollama_client.generate(model="llama3.2:1b",system=OLLAMA_SYSTEM_SETTINGS, prompt=prompt,options={"temperature": 0.0,"num_predict":75},keep_alive=-1,stream=True)
+    parsed = output_parser_medical.parse(response)
     return parsed

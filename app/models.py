@@ -30,11 +30,11 @@ def create_model(model_list) -> tuple[bool,str]:
         \n\ttuple: (status: bool,message: str)
     """
     models = [model.model for model in model_list.models]
-    if ("llama3.2:latest" in models):
+    if ("llama3.2:1b" in models):
             return (True, "all required models exist")
     
     try:
-        ollama_client.pull("llama3.2")
+        ollama_client.pull("llama3.2:1b")
         return (True, "all models pulled and created successfully")
     except Exception as e:
         return (False, f"Error while pulling or creating ollama model: {e}")

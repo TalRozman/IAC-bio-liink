@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    <h1>Hello Bana</h1>
+    <h1>Hello Banana</h1>
     <div class="main-display">
         <div class="image-wrapper">
             <img id="human_image" src="static/images/front.png" usemap="#body-map-front" alt="Human Body" />
@@ -14,8 +14,7 @@
         </div>
 
         <map name="body-map-front">
-            <area alt="head" title="head" coords="143,71,54" shape="circle"
-                onclick="add_injury('head')">
+            <area alt="head" title="head" coords="143,71,54" shape="circle" onclick="add_injury('head')">
             <area alt="neck" title="neck" coords="117,120,65,146,121,162,167,165,215,147,168,119,142,127,129,124"
                 shape="poly" onclick="add_injury('neck')">
             <area alt="chest" title="chest"
@@ -28,9 +27,8 @@
                 shape="poly" onclick="add_injury('hip')">
             <area alt="right-thigh" title="right-thigh" coords="65,446,141,443,134,581,87,582,76,532,66,484"
                 shape="poly" onclick="add_injury('right-thigh')">
-            <area alt="left-thigh" title="left-thigh"
-                coords="143,443,220,444,221,521,205,579,157,580,145,502,144,475" shape="poly"
-                onclick="add_injury('left-thigh')">
+            <area alt="left-thigh" title="left-thigh" coords="143,443,220,444,221,521,205,579,157,580,145,502,144,475"
+                shape="poly" onclick="add_injury('left-thigh')">
             <area alt="right-knee" title="right-knee" coords="82,582,138,628" shape="rect"
                 onclick="add_injury('right-knee')">
             <area alt="left-knee" title="left-knee" coords="152,582,208,624" shape="rect"
@@ -65,24 +63,20 @@
             <area alt="buttocks" title="buttocks"
                 coords="104,349,86,453,120,457,167,452,203,456,244,456,239,401,231,351,169,384" shape="poly"
                 onclick="add_injury('buttocks')">
-            <area alt="left-thigh" title="left-thigh"
-                coords="90,511,105,594,151,597,161,497,163,454,120,460,88,456" shape="poly"
-                onclick="add_injury('left-thigh')">
-            <area alt="right-thigh" title="right-thigh"
-                coords="170,455,168,492,173,591,225,591,238,502,243,457" shape="poly"
-                onclick="add_injury('right-thigh')">
+            <area alt="left-thigh" title="left-thigh" coords="90,511,105,594,151,597,161,497,163,454,120,460,88,456"
+                shape="poly" onclick="add_injury('left-thigh')">
+            <area alt="right-thigh" title="right-thigh" coords="170,455,168,492,173,591,225,591,238,502,243,457"
+                shape="poly" onclick="add_injury('right-thigh')">
             <area alt="left-shin" title="left-shin"
                 coords="106,595,97,641,100,681,108,713,117,775,145,777,142,743,153,658,148,597" shape="poly"
                 onclick="add_injury('left-shin')">
             <area alt="right-shin" title="right-shin"
                 coords="174,592,178,617,171,665,177,739,168,776,197,776,206,729,220,693,227,656,221,610,225,592,200,593"
                 shape="poly" onclick="add_injury('right-shin')">
-            <area alt="left-foot" title="left-foot"
-                coords="146,775,146,813,119,817,99,810,98,799,115,794,115,777" shape="poly"
-                onclick="add_injury('left-foot')">
-            <area alt="right-foot" title="right-foot"
-                coords="166,776,167,813,184,814,219,812,212,799,201,789,198,776" shape="poly"
-                onclick="add_injury('right-foot')">
+            <area alt="left-foot" title="left-foot" coords="146,775,146,813,119,817,99,810,98,799,115,794,115,777"
+                shape="poly" onclick="add_injury('left-foot')">
+            <area alt="right-foot" title="right-foot" coords="166,776,167,813,184,814,219,812,212,799,201,789,198,776"
+                shape="poly" onclick="add_injury('right-foot')">
             <area alt="left-hand" title="left-hand"
                 coords="85,152,73,158,62,174,55,191,60,210,57,227,51,256,51,279,46,301,45,322,44,340,46,369,46,387,37,398,3,422,8,430,24,421,20,433,14,455,16,463,25,467,34,472,45,472,51,467,62,463,67,443,72,419,70,398,72,380,80,360,89,336,94,300,97,269"
                 shape="poly" onclick="add_injury('left-hand')">
@@ -92,8 +86,8 @@
         </map>
 
         <div class="break"></div>
-        <button onclick="change_image_side()">FLIP</button><br/>
-        <button onclick="handle_completed()">DONE</button><br/>
+        <button onclick="change_image_side()">FLIP</button><br />
+        <button onclick="handle_completed()">DONE</button><br />
     </div>
 
     <div id="severity_modal" class="modal">
@@ -101,8 +95,20 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <p>Choose the severity of the <span id="injury-part"></span> injury</p>
-            <input type="range" id="select" name="severity" min="1" max="6" style="width: 80%;"/><br /><br />
+            <input type="range" id="select" name="severity" min="1" max="6" style="width: 80%;" /><br /><br />
             <button id="severity_submit">Submit</button>
+        </div>
+    </div>
+
+    <div id="result_modal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>
+                The recommended injury severity is: <span id="severity-result"></span>.<br />
+                Reason: <br /><span id="reason-result"></span><br />
+                Indicators: <br /><span id="indicators-result"></span><br />
+            </p>
         </div>
     </div>
 
@@ -212,28 +218,33 @@
             img.setAttribute("usemap", image_side_flag ? "#body-map-front" : "#body-map-back");
         };
 
-        const handle_modal = (location) => {
+        const handle_modal = (type) => {
             return new Promise((resolve) => {
-                let modal = document.getElementById("severity_modal");
-                let submit = document.getElementById("severity_submit");
+                let modal = document.getElementById(`${type}_modal`);
 
                 modal.style.display = "block";
+
+                if (type === "severity") {
+                    let submit = document.getElementById("severity_submit");
+
+                    submit.onclick = () => {
+                        let val = parseInt(document.getElementById("select").value);
+                        modal.style.display = "none"
+                        switch (val) {
+                            case 1: resolve("LIGHT"); break;
+                            case 2: resolve("MODERATE"); break;
+                            case 3: resolve("SERIOUS"); break;
+                            case 4: resolve("SEVERE"); break;
+                            case 5: resolve("CRITICAL"); break;
+                            case 6: resolve("UNSURVIVEABLE"); break;
+                        }
+                    };
+                }
 
                 const closeModal = () => {
                     modal.style.display = "none";
                     resolve("");
                 };
-                submit.onclick = () => {
-                    let val = parseInt(document.getElementById("select").value);
-                    modal.style.display = "none"
-                    switch (val) {
-                    case 1:resolve("LIGHT");break;
-                    case 2:resolve("MODERATE");break;
-                    case 3:resolve("SERIOUS");break;
-                    case 4:resolve("SEVERE");break;
-                    case 5:resolve("CRITICAL");break;
-                    case 6:resolve("UNSURVIVEABLE");break;
-                }};
 
                 document.getElementsByClassName("close")[0].onclick = closeModal;
                 window.onclick = (event) => {
@@ -255,7 +266,7 @@
             }
             else {
                 document.getElementById('injury-part').innerText = location.replaceAll('-', ' ');
-                severity = await handle_modal()
+                severity = await handle_modal("severity")
                 console.log(severity)
                 if (severity === "") return
                 injury_list.push({ "part": location, "severity": severity });
@@ -263,24 +274,116 @@
             drawHighlights(severity);
         };
 
-        const handle_completed=async()=>{
-            if(injury_list.length === 0) return;
+        const handle_completed = async () => {
+            if (injury_list.length === 0) return;
 
             let msg = "The patient has been diagnosed with ";
 
-            injury_list.forEach((item)=>{
+            injury_list.forEach((item) => {
                 msg += `${item.severity.toLowerCase()} ${item.part} injury, `
             })
 
             console.log(msg)
 
-            const data = await fetch('/query',
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(msg)
-            }).then(res => res.json());
-            console.log(data);
+            const setOutput = (fullText) => {
+                severity_element = document.getElementById('severity-result');
+                justification_element = document.getElementById('reason-result');
+                indicators_element = document.getElementById('indicators-result');
+
+                severity_element.innerText = "Processing...";
+                justification_element.innerText = "";
+                indicators_element.innerText = "";
+
+                const rankStart = fullText.indexOf('"Rank":');
+                if (rankStart !== -1) {
+                    const rankStr = fullText.substring(rankStart + 7).split(/[,}\n]/)[0].replace(/["\s]/g, '');
+                    if (rankStr) severity_element.innerText = rankStr;
+                }
+
+                const justStart = fullText.indexOf('"Justification":');
+                const indStart = fullText.indexOf('"Key_Medical_Indicators":');
+                
+                if (justStart !== -1) {
+                    let endIdx = indStart !== -1 ? indStart : fullText.length;
+                    let justStr = fullText.substring(justStart + 16, endIdx)
+                        .replace(/^[\s"\[]+/, '')
+                        .replace(/["\s,\]}]+$/, '')
+                        .replace(/\\n/g, '\n');
+                    justification_element.innerText = justStr;
+                }
+
+                if (indStart !== -1) {
+                    let indStr = fullText.substring(indStart + 25)
+                        .replace(/^[\s"\[]+/, '')
+                        .replace(/["\s,\]}]+$/, '')
+                        .replace(/",\s*"/g, ', '); // הפיכת מערך לרשימה פסיק-רווח
+                    indicators_element.innerText = indStr;
+                }
+
+                // const rankMatch = fullText.match(/"Rank"\s*:\s*"?([^",}]*)/);
+                // if (rankMatch && rankMatch[1]) {
+                //     severity_element.innerText = rankMatch[1].replace(/"/g, '').trim();
+                // }
+
+                // const jMatch = fullText.match(/"Justification"\s*:\s*([\s\S]*?)(?=\s*,\s*"[a-zA-Z_]+"\s*:|$)/);
+                // if (jMatch && jMatch[1]) {
+                //     // מונע גלישה לאובייקט JSON הבא במקרה של הזיות (חותך בשילוב של } ו- { )
+                //     let rawJ = jMatch[1].split(/\}\s*\{/)[0]; 
+                    
+                //     let cleanJ = rawJ
+                //         .replace(/^[\s"\[]+/, '') // ניקוי תחילת המחרוזת
+                //         .replace(/["\]\s}]+$/, '') // ניקוי סוף המחרוזת
+                //         .replace(/",\s*"/g, '\n') // אם זה מערך - הפיכת פסיקים לירידת שורה
+                //         .replace(/\\n/g, '\n')    
+                //         .replace(/\\"/g, '"');    
+                //     justification_element.innerText = cleanJ.trim();
+                // }
+
+                // const iMatch = fullText.match(/"Key_Medical_Indicators"\s*:\s*([\s\S]*)/);
+                // if (iMatch && iMatch[1]) {
+                //     // קסם החיתוך: מחלק את הטקסט ברגע שהוא מזהה ] או } ולוקח רק את החלק הראשון והנקי!
+                //     let rawI = iMatch[1].split(/\]|\}/)[0];
+                    
+                //     let cleanI = rawI
+                //         .replace(/^[\s"\[]+/, '') 
+                //         .replace(/["\s]+$/, '') 
+                //         .replace(/",\s*"/g, ', ') // אם זה מערך - הפיכה לפסיק ורווח
+                //         .replace(/\\"/g, '"');
+                        
+                //     indicators_element.innerText = cleanI.trim();
+                // }
+            }
+
+
+            try {
+                const response = await fetch('/query',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(msg)
+                    });
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder("utf-8");
+                let fullText = "";
+                handle_modal("result");
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value, { stream: true });
+                    fullText += chunk;
+                    console.log(fullText)
+                    requestAnimationFrame(()=>setOutput(fullText));
+                    
+                }
+            }
+            catch (error) {
+                console.error(error.message);
+            }
         }
     </script>
 
