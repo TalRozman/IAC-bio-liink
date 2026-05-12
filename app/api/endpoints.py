@@ -2,7 +2,6 @@ import os
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import flask
 
-from app.rag.chain import get_rag_chain_medical
 from app.rag.prompt_templates import build_prompt_medical
 
 from app.models import ollama_client
@@ -63,11 +62,3 @@ def query():
             if has_started and open_braces == 0:
                 break
     return flask.Response(generate(), mimetype="text/plain",direct_passthrough=True)
-
-    # answer = get_rag_chain_medical(prompt)
-    # response_dict = answer.model_dump()
-    # return {
-    #     'success': True,
-    #     'message': 'successfully answered the question',
-    #     'data': response_dict
-    #     }, 200
