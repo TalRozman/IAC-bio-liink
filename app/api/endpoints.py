@@ -17,7 +17,7 @@ def query():
     send query to LLM model
     """
     try:
-        user_question = flask.request.data
+        user_question = flask.request.data.decode('utf-8')
     except Exception as e:
         return {
             'success': False,
@@ -27,20 +27,24 @@ def query():
     prompt = build_prompt_medical(user_question)
 
     schema = {
-    "type": "object",
-    "properties": {
-        "Rank": { "type": "string" },
-        "Justification": { "type": "string" },
-        "Key_Medical_Indicators": { "type": "array", "items": {"type": "string"} }
-    },
-    "required": ["Rank", "Justification", "Key_Medical_Indicators"]
+        "type": "object",
+        "properties": {
+            "Primary_Severe_Injury": { "type": "string" },
+            "Rank": { 
+                "type": "string",
+                "enum": ["LIGHT", "MODERATE", "SERIOUS", "SEVERE", "CRITICAL", "UNSURVIVEABLE"] # <--- THIS IS THE MAGIC FIX
+            },
+            "Justification": { "type": "string" },
+            "Key_Medical_Indicators": { "type": "array", "items": {"type": "string"} }
+        },
+        "required": ["Primary_Severe_Injury", "Rank", "Justification", "Key_Medical_Indicators"]
     }
 
     def generate():
         open_braces = 0
         for chunk in ollama_client.generate(model="llama3.2:1b",system=OLLAMA_SYSTEM_SETTINGS, prompt=prompt,format=schema, options={
             "temperature": 0.0,
-            "num_predict": 75,
+            "num_predict": 250,
             "top_k": 1,
             "top_p": 1.0,
             "num_ctx": 1024,
