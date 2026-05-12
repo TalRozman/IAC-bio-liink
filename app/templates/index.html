@@ -6,7 +6,6 @@
 </head>
 
 <body>
-    <h1>Hello Banana</h1>
     <div class="main-display">
         <div class="image-wrapper">
             <img id="human_image" src="static/images/front.png" usemap="#body-map-front" alt="Human Body" />
@@ -86,14 +85,15 @@
         </map>
 
         <div class="break"></div>
-        <button onclick="change_image_side()">FLIP</button><br />
-        <button onclick="handle_completed()">DONE</button><br />
+        <button onclick="change_image_side()" style="font-size: 200%">FLIP</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button onclick="handle_completed()" style="font-size: 200%">DONE</button>
     </div>
 
     <div id="severity_modal" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span id="close_severity_modal" class="close">&times;</span>
             <p>Choose the severity of the <span id="injury-part"></span> injury</p>
             <input type="range" id="select" name="severity" min="1" max="6" style="width: 80%;" /><br /><br />
             <button id="severity_submit">Submit</button>
@@ -103,7 +103,7 @@
     <div id="result_modal" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span id="close_result_modal" class="close">&times;</span>
             <p>
                 The recommended injury severity is: <span id="severity-result"></span>.<br />
                 Reason: <br /><span id="reason-result"></span><br />
@@ -243,10 +243,15 @@
 
                 const closeModal = () => {
                     modal.style.display = "none";
+                    document.getElementById('severity-result').innerText="";
+                    document.getElementById('reason-result').innerText="";
+                    document.getElementById('indicators-result').innerText="";
                     resolve("");
                 };
 
-                document.getElementsByClassName("close")[0].onclick = closeModal;
+                document.getElementById('close_result_modal').onclick = closeModal
+                document.getElementById('close_severity_modal').onclick = closeModal
+
                 window.onclick = (event) => {
                     if (event.target === modal) {
                         closeModal()
@@ -262,13 +267,17 @@
             const index = injury_list.findIndex(item => item.part === location);
             if (index > -1) {
                 injury_list.splice(index, 1);
+                
+                // FIX: Redraw the canvas to clear the removed color
+                drawHighlights(); 
+                
                 return;
             }
             else {
                 document.getElementById('injury-part').innerText = location.replaceAll('-', ' ');
-                severity = await handle_modal("severity")
-                console.log(severity)
-                if (severity === "") return
+                severity = await handle_modal("severity");
+                console.log(severity);
+                if (severity === "") return;
                 injury_list.push({ "part": location, "severity": severity });
             }
             drawHighlights(severity);
@@ -286,73 +295,54 @@
             console.log(msg)
 
             const setOutput = (fullText) => {
-                severity_element = document.getElementById('severity-result');
-                justification_element = document.getElementById('reason-result');
-                indicators_element = document.getElementById('indicators-result');
+                const severity_element = document.getElementById('severity-result');
+                const justification_element = document.getElementById('reason-result');
+                const indicators_element = document.getElementById('indicators-result');
 
-                severity_element.innerText = "Processing...";
-                justification_element.innerText = "";
-                indicators_element.innerText = "";
-
-                const rankStart = fullText.indexOf('"Rank":');
-                if (rankStart !== -1) {
-                    const rankStr = fullText.substring(rankStart + 7).split(/[,}\n]/)[0].replace(/["\s]/g, '');
-                    if (rankStr) severity_element.innerText = rankStr;
+                if (!fullText) {
+                    severity_element.innerText = "Processing...";
+                    justification_element.innerText = "";
+                    indicators_element.innerText = "";
+                    return;
                 }
 
-                const justStart = fullText.indexOf('"Justification":');
-                const indStart = fullText.indexOf('"Key_Medical_Indicators":');
-                
-                if (justStart !== -1) {
-                    let endIdx = indStart !== -1 ? indStart : fullText.length;
-                    let justStr = fullText.substring(justStart + 16, endIdx)
-                        .replace(/^[\s"\[]+/, '')
-                        .replace(/["\s,\]}]+$/, '')
-                        .replace(/\\n/g, '\n');
-                    justification_element.innerText = justStr;
-                }
+                try {
+                    const jsonMatch = fullText.match(/\{[\s\S]*\}/);
+                    if (!jsonMatch) throw new Error("JSON not yet formed");
+                    const data = JSON.parse(jsonMatch[0]);
+                    if (data.Rank) severity_element.innerText = data.Rank;
+                    if (data.Justification) justification_element.innerText = data.Justification;
+                    if (data.Key_Medical_Indicators) {
+                        indicators_element.innerText = Array.isArray(data.Key_Medical_Indicators) 
+                            ? data.Key_Medical_Indicators.join(', ') 
+                            : data.Key_Medical_Indicators;
+                    }
 
-                if (indStart !== -1) {
-                    let indStr = fullText.substring(indStart + 25)
-                        .replace(/^[\s"\[]+/, '')
-                        .replace(/["\s,\]}]+$/, '')
-                        .replace(/",\s*"/g, ', '); // הפיכת מערך לרשימה פסיק-רווח
-                    indicators_element.innerText = indStr;
-                }
-
-                // const rankMatch = fullText.match(/"Rank"\s*:\s*"?([^",}]*)/);
-                // if (rankMatch && rankMatch[1]) {
-                //     severity_element.innerText = rankMatch[1].replace(/"/g, '').trim();
-                // }
-
-                // const jMatch = fullText.match(/"Justification"\s*:\s*([\s\S]*?)(?=\s*,\s*"[a-zA-Z_]+"\s*:|$)/);
-                // if (jMatch && jMatch[1]) {
-                //     // מונע גלישה לאובייקט JSON הבא במקרה של הזיות (חותך בשילוב של } ו- { )
-                //     let rawJ = jMatch[1].split(/\}\s*\{/)[0]; 
-                    
-                //     let cleanJ = rawJ
-                //         .replace(/^[\s"\[]+/, '') // ניקוי תחילת המחרוזת
-                //         .replace(/["\]\s}]+$/, '') // ניקוי סוף המחרוזת
-                //         .replace(/",\s*"/g, '\n') // אם זה מערך - הפיכת פסיקים לירידת שורה
-                //         .replace(/\\n/g, '\n')    
-                //         .replace(/\\"/g, '"');    
-                //     justification_element.innerText = cleanJ.trim();
-                // }
-
-                // const iMatch = fullText.match(/"Key_Medical_Indicators"\s*:\s*([\s\S]*)/);
-                // if (iMatch && iMatch[1]) {
-                //     // קסם החיתוך: מחלק את הטקסט ברגע שהוא מזהה ] או } ולוקח רק את החלק הראשון והנקי!
-                //     let rawI = iMatch[1].split(/\]|\}/)[0];
-                    
-                //     let cleanI = rawI
-                //         .replace(/^[\s"\[]+/, '') 
-                //         .replace(/["\s]+$/, '') 
-                //         .replace(/",\s*"/g, ', ') // אם זה מערך - הפיכה לפסיק ורווח
-                //         .replace(/\\"/g, '"');
+                } catch (e) {
+                    const extractStreamingValue = (key) => {
+                        const regex = new RegExp(`"${key}"\\s*:\\s*(?:"([^"]*)"|\\[([^\\]]*)\\]?)`);
+                        const match = fullText.match(regex);
                         
-                //     indicators_element.innerText = cleanI.trim();
-                // }
-            }
+                        if (match) {
+                            if (match[1]) return match[1]; // String match (Rank, Justification)
+                            if (match[2]) {
+                                // Array match (Indicators) - strip quotes and format cleanly
+                                return match[2].replace(/"/g, '').split(',').map(s => s.trim()).filter(s => s).join(', ');
+                            }
+                        }
+                        return null;
+                    };
+
+                    const rank = extractStreamingValue("Rank");
+                    if (rank) severity_element.innerText = rank;
+
+                    const just = extractStreamingValue("Justification");
+                    if (just) justification_element.innerText = just;
+
+                    const ind = extractStreamingValue("Key_Medical_Indicators");
+                    if (ind) indicators_element.innerText = ind;
+                }
+            };
 
 
             try {
